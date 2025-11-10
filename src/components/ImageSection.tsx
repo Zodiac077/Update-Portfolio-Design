@@ -3,18 +3,30 @@ import { ImageWithFallback } from './fallback/ImageWithFallback';
 
 export function ImageSection() {
   const imageRef = useRef<HTMLDivElement>(null);
+  const ticking = useRef(false);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (imageRef.current) {
-        const img = imageRef.current.querySelector('img');
-        if (img) {
-          img.style.transform = `translateY(${window.scrollY * -0.2}px)`;
-        }
+      lastScrollY.current = window.scrollY;
+
+      if (!ticking.current) {
+        requestAnimationFrame(() => {
+          if (imageRef.current) {
+            const img = imageRef.current.querySelector('img');
+            if (img) {
+              const translateY = lastScrollY.current * -0.15;
+              img.style.transform = `translate3d(0, ${translateY}px, 0)`;
+              img.style.willChange = 'transform';
+            }
+          }
+          ticking.current = false;
+        });
+        ticking.current = true;
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -24,7 +36,13 @@ export function ImageSection() {
         <ImageWithFallback 
           src="/images/Techno.jpg"
           alt="Hero Portfolio Image"
-          className="w-full rounded-2xl object-cover transition-transform duration-200 h-[500px]"
+          className="w-full rounded-2xl object-cover transform-gpu will-change-transform h-[500px]"
+          style={{ 
+            backfaceVisibility: 'hidden',
+            perspective: '1000px',
+            WebkitBackfaceVisibility: 'hidden',
+            WebkitPerspective: '1000px'
+          }}
         />
       </div>
     </section>
