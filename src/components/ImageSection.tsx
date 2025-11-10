@@ -17,9 +17,8 @@ export function ImageSection() {
           if (imageRef.current) {
             const img = imageRef.current.querySelector('img');
               if (img) {
-              // Reduced parallax effect for a subtler movement. Keep the negative sign
-              // so the image moves opposite to scroll direction as before.
-              const translateY = lastScrollY * -0.15; // Reduced effect
+              // Disabled parallax effect by setting multiplier to 0
+              const translateY = lastScrollY * 0; // No movement
               img.style.transform = `translate3d(0, ${translateY}px, 0)`;
               img.style.transition = 'transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1)';
             }
