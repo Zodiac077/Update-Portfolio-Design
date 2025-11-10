@@ -16,8 +16,10 @@ export function ImageSection() {
         window.requestAnimationFrame(() => {
           if (imageRef.current) {
             const img = imageRef.current.querySelector('img');
-            if (img) {
-              const translateY = lastScrollY * -0.25; // Increased effect for more noticeable parallax
+              if (img) {
+              // Reduced parallax effect for a subtler movement. Keep the negative sign
+              // so the image moves opposite to scroll direction as before.
+              const translateY = lastScrollY * -0.15; // Reduced effect
               img.style.transform = `translate3d(0, ${translateY}px, 0)`;
               img.style.transition = 'transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1)';
             }
