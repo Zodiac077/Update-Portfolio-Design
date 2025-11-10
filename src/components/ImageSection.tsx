@@ -17,8 +17,8 @@ export function ImageSection() {
           if (imageRef.current) {
             const img = imageRef.current.querySelector('img');
               if (img) {
-              // Disabled parallax effect by setting multiplier to 0
-              const translateY = lastScrollY * 0; // No movement
+              // Re-enabled parallax effect with subtle movement
+              const translateY = lastScrollY * 0.15; // Smooth parallax effect
               img.style.transform = `translate3d(0, ${translateY}px, 0)`;
               img.style.transition = 'transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1)';
             }
