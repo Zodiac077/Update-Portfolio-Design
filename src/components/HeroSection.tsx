@@ -27,7 +27,7 @@ export function HeroSection() {
   }, []);
 
   return (
-    <section className="h-screen flex flex-col justify-center items-center text-center overflow-hidden pt-16">
+    <section id="home" className="h-screen flex flex-col justify-center items-center text-center overflow-hidden pt-16">
       <div ref={wrapperRef} className="w-4/5 flex justify-center items-center overflow-hidden">
         <h1 
           ref={titleRef}
