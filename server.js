@@ -141,6 +141,16 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Debug endpoint to check environment variables
+app.get('/api/debug', (req, res) => {
+  res.status(200).json({
+    mongodb_uri_set: !!process.env.MONGODB_URI,
+    mongodb_uri_preview: process.env.MONGODB_URI ? process.env.MONGODB_URI.substring(0, 50) + '...' : 'NOT SET',
+    node_env: process.env.NODE_ENV,
+    port: process.env.PORT
+  });
+});
+
 // Root endpoint
 app.get('/', (req, res) => {
   res.json({ 
