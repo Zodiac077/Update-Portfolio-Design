@@ -69,7 +69,7 @@
             "build": "vite build",
             "preview": "vite preview",
             "clean": "rm -rf build",
-            "server": "node server.js",
+            "start": "node server.js",
             "server:dev": "nodemon server.js"
       },
       "engines": {
