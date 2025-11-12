@@ -24,12 +24,13 @@ console.log('MongoDB URI:', mongoURI.replace(/\/\/.*:.*@/, '//***:***@'));
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  serverSelectionTimeoutMS: 5000,
-  connectTimeoutMS: 10000,
+  serverSelectionTimeoutMS: 10000,
+  connectTimeoutMS: 15000,
 })
   .then(() => console.log('✓ MongoDB connected successfully'))
   .catch(err => {
     console.error('✗ MongoDB connection error:', err.message);
+    console.error('Full error:', err);
     // Continue running even if MongoDB fails initially
   });
 
