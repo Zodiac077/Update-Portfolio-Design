@@ -6,6 +6,9 @@ import { toast } from "sonner";
 // Initialize EmailJS
 emailjs.init('q5iXnUp6HItOHohjk');
 
+// Backend API URL - Update this with your deployed backend URL
+const API_URL = (import.meta as any).env.VITE_API_URL || 'http://localhost:5000';
+
 export function ContactSection() {
   const formRef = useRef<HTMLFormElement>(null);
   const [formData, setFormData] = useState({
@@ -22,7 +25,7 @@ export function ContactSection() {
 
     try {
       // Save to MongoDB
-      const mongoResponse = await fetch('https://your-backend-url.com/api/contact', {
+      const mongoResponse = await fetch(`${API_URL}/api/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
