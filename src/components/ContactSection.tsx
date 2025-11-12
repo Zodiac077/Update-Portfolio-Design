@@ -21,6 +21,24 @@ export function ContactSection() {
     setLoading(true);
 
     try {
+      // Save to MongoDB
+      const mongoResponse = await fetch('https://your-backend-url.com/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          title: formData.title,
+          message: formData.message
+        })
+      });
+
+      if (!mongoResponse.ok) {
+        throw new Error('Failed to save to database');
+      }
+
       console.log('Starting to send email...');
       
       const templateParams = {
