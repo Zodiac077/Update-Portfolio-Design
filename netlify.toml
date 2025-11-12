@@ -6,6 +6,10 @@
   NODE_VERSION = "22.21.1"
   NPM_VERSION = "10.9.4"
 
+# Ignore backend files during build
+[context.production]
+  ignore = "git diff --quiet $COMMIT_PARENT $COMMIT -- server.js backend-package.json Procfile"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
