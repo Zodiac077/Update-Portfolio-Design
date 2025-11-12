@@ -60,6 +60,7 @@
             "@types/react": "^19.2.2",
             "@types/react-dom": "^19.2.2",
             "@vitejs/plugin-react-swc": "^3.10.2",
+            "concurrently": "^9.2.1",
             "marked": "^17.0.0",
             "puppeteer": "^24.29.1",
             "vite": "6.3.5"
@@ -70,7 +71,8 @@
             "preview": "vite preview",
             "clean": "rm -rf build",
             "start": "node server.js",
-            "server:dev": "nodemon server.js"
+            "server:dev": "nodemon server.js",
+            "dev-all": "concurrently \"npm start\" \"npm run dev\""
       },
       "engines": {
             "node": ">=22.21.1",
