@@ -23,6 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio';
 
 console.log('Attempting to connect to MongoDB...');
+console.log('Node Environment:', process.env.NODE_ENV || 'not set');
 console.log('MongoDB URI:', mongoURI.replace(/\/\/.*:.*@/, '//***:***@'));
 
 mongoose.connect(mongoURI, {
