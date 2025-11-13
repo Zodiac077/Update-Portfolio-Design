@@ -138,6 +138,142 @@ app.get('/api/contacts', async (req, res) => {
   }
 });
 
+// Delete a contact by ID
+app.delete('/api/contacts/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Validate MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid contact ID'
+      });
+    }
+
+    const deletedContact = await Contact.findByIdAndDelete(id);
+
+    if (!deletedContact) {
+      return res.status(404).json({
+        success: false,
+        message: 'Contact not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Contact deleted successfully',
+      data: deletedContact
+    });
+  } catch (error) {
+    console.error('Error deleting contact:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error deleting contact',
+      error: error.message
+    });
+  }
+});
+
+// Get a single contact by ID
+app.get('/api/contacts/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Validate MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid contact ID'
+      });
+    }
+
+    const contact = await Contact.findById(id);
+
+    if (!contact) {
+      return res.status(404).json({
+        success: false,
+        message: 'Contact not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: contact
+    });
+  } catch (error) {
+    console.error('Error fetching contact:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching contact',
+      error: error.message
+    });
+  }
+});
+
+// Get contacts with pagination
+app.get('/api/data/contacts', async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const contacts = await Contact.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    const total = await Contact.countDocuments();
+
+    res.status(200).json({
+      success: true,
+      data: contacts,
+      pagination: {
+        total,
+        page,
+        limit,
+        pages: Math.ceil(total / limit)
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching contacts:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching contacts',
+      error: error.message
+    });
+  }
+});
+
+// Get contact statistics
+app.get('/api/data/stats', async (req, res) => {
+  try {
+    const total = await Contact.countDocuments();
+    const recentContacts = await Contact.find()
+      .sort({ createdAt: -1 })
+      .limit(5);
+
+    const uniqueEmails = await Contact.distinct('email');
+
+    res.status(200).json({
+      success: true,
+      data: {
+        totalContacts: total,
+        uniqueEmails: uniqueEmails.length,
+        recentContacts,
+        lastUpdate: new Date().toISOString()
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching stats:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching statistics',
+      error: error.message
+    });
+  }
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.status(200).json({ 
@@ -163,10 +299,43 @@ app.get('/', (req, res) => {
   res.json({ 
     message: 'Portfolio Backend API',
     version: '1.0.0',
+    baseUrl: process.env.VITE_API_URL || 'http://localhost:5000',
     endpoints: {
-      health: '/api/health',
-      contact: '/api/contact',
-      contacts: '/api/contacts'
+      health: {
+        method: 'GET',
+        url: '/api/health',
+        description: 'Server health check'
+      },
+      contact: {
+        method: 'POST',
+        url: '/api/contact',
+        description: 'Submit a new contact message'
+      },
+      allContacts: {
+        method: 'GET',
+        url: '/api/contacts',
+        description: 'Get all contacts (no pagination)'
+      },
+      contactById: {
+        method: 'GET',
+        url: '/api/contacts/:id',
+        description: 'Get a specific contact by ID'
+      },
+      deleteContact: {
+        method: 'DELETE',
+        url: '/api/contacts/:id',
+        description: 'Delete a contact by ID'
+      },
+      paginatedContacts: {
+        method: 'GET',
+        url: '/api/data/contacts?page=1&limit=10',
+        description: 'Get contacts with pagination'
+      },
+      stats: {
+        method: 'GET',
+        url: '/api/data/stats',
+        description: 'Get contact statistics and summary'
+      }
     }
   });
 });

@@ -1,0 +1,6 @@
+[build]
+# Skip npm build script - this is a backend only, not frontend
+cmds = ["npm ci --omit=dev"]
+
+[start]
+cmd = "node server.js"
