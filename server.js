@@ -2,9 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-// Only load .env in development
-if (process.env.NODE_ENV !== 'production') {
+// Load .env only if file exists (development)
+try {
   require('dotenv').config();
+} catch (e) {
+  // Silently fail if dotenv not available or .env doesn't exist
 }
 
 const app = express();
